@@ -39,7 +39,7 @@ void Server::run() {
 }
 
 void Server::listen() {
-	while (enet_host_service(serverHost, &event, 1000) > 0) {
+	while (enet_host_service(serverHost, &event, 30) > 0) {
 		switch (event.type) {
 		case ENET_EVENT_TYPE_CONNECT:
 			peers.push_back(event.peer);
@@ -60,6 +60,8 @@ void Server::listen() {
 				<< ".\n";
 			/* Clean up the packet now that we're done using it. */
 			enet_packet_destroy(event.packet);
+			// send back a data 
+			send("recived!", event.peer);
 			break;
 
 		case ENET_EVENT_TYPE_DISCONNECT:
@@ -75,5 +77,10 @@ void Server::listen() {
 			event.peer->data = NULL;
 		}
 	}
+}
+
+void Server::send(const std::string& buffer, ENetPeer* peer) {
+	ENetPacket* packet = enet_packet_create(buffer.c_str(), buffer.size() + 1, ENET_PACKET_FLAG_RELIABLE);
+	enet_peer_send(peer, 0, packet);
 }
 

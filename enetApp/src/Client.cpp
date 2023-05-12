@@ -61,14 +61,12 @@ void Client::send(const std::string& buffer) {
 }
 
 void Client::recieve() {
-	while (enet_host_service(clientHost, &event, 1000) > 0) {
+	while (enet_host_service(clientHost, &event, 30) > 0) {
 		switch (event.type) {
 		case ENET_EVENT_TYPE_RECEIVE:
 			std::cout
-				<< "A packet of length" << event.packet->dataLength
-				<< "containing" << event.packet->data
-				<< "was received from " << event.peer->data
-				<< " on channel " << event.channelID
+				<< "server says: '" << event.packet->data
+				<< "' on channel " << event.channelID
 				<< ".\n";
 			break;
 		case ENET_EVENT_TYPE_DISCONNECT:

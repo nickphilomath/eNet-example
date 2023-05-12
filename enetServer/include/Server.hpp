@@ -17,6 +17,8 @@ private:
 	void Initialize();
 	void listen();
 
+	void send(const std::string& buffer, ENetPeer* peer);
+
 	ENetAddress address;
 	ENetHost* serverHost;
 	ENetEvent event;
